@@ -4,9 +4,11 @@
 import os, sys
 
 import _reprs
-from _reprs import reprs
+from _reprs import reprs, evals
 
-__ALL__ = ['reprs', 'pyreprs', 'pyevals', 'pyunreprs']
+unreprs = evals
+
+__ALL__ = ['reprs', 'evals', 'unreprs', 'pyreprs', 'pyevals', 'pyunreprs']
 
 def pyreprs(s, excludes=None):
     escape_chars = ['"', "'", "\\", "\t", "\n", "\r"]
@@ -42,13 +44,21 @@ def pyevals(s):
             else:
                 ret.append(s[i])
         elif st == 1:
-            if s[i] in ('"', "'", "\\", "t", "n", "r"):
+            if s[i] in ('"', "'", "\\", "t", "n", "r", "a", "b", "v", "f"):
                 if s[i] == 't':
                     ret.append('\t')
                 elif s[i] == 'n':
                     ret.append('\n')
                 elif s[i] == 'r':
                     ret.append('\r')
+                elif s[i] == 'f':
+                    ret.append('\f')
+                elif s[i] == 'v':
+                    ret.append('\v')
+                elif s[i] == 'a':
+                    ret.append('\a')
+                elif s[i] == 'b':
+                    ret.append('\b')
                 else:
                     ret.append(s[i])
                 st = 0

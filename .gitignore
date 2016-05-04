@@ -5,3 +5,4 @@ reprs.pdf
 reprs.dot
 /dist
 *.egg-info
+*.pyc
