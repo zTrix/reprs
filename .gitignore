@@ -1,6 +1,5 @@
 _reprs.so
 /build
-_reprs.c
 reprs.pdf
 reprs.dot
 /dist
