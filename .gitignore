@@ -1,4 +1,5 @@
 _reprs.so
+_reprs.*.so
 /build
 reprs.pdf
 reprs.dot

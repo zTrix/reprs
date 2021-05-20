@@ -1,9 +1,10 @@
+#define PY_SSIZE_T_CLEAN
 #include <Python.h>
 #include <stdio.h>
 #include <stdint.h>
 
 /* Docstrings */
-static char module_docstring[] = "This module provides reprs interface for python";
+static char module_docstring[] = "This module provides blazing-fast reprs and evals implementation for python\n";
 static char reprs_docstring[] = "reprs function return repr(str) for string";
 static char evals_docstring[] = "evals function return eval(str) for string";
 
@@ -18,9 +19,16 @@ static PyMethodDef module_methods[] = {
     {NULL, NULL, 0, NULL}
 };
 
-/* Initialize the module */
-PyMODINIT_FUNC init_reprs(void) {
-    Py_InitModule3("_reprs", module_methods, module_docstring);
+static struct PyModuleDef reprs = {
+    PyModuleDef_HEAD_INIT,
+    "reprs", /* name of module */
+    module_docstring, /* module documentation, may be NULL */
+    -1,   /* size of per-interpreter state of the module, or -1 if the module keeps state in global variables. */
+    module_methods
+};
+
+PyMODINIT_FUNC PyInit__reprs(void) {
+    return PyModule_Create(&reprs);
 }
 
 static char hexdigit[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
@@ -53,11 +61,15 @@ static char hexdigit[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a',
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-variable"
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+#pragma GCC diagnostic ignored "-Wunused-const-variable"
 %% write data;
 #pragma GCC diagnostic pop
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 static PyObject *_reprs(PyObject *self, PyObject *args, PyObject *kwargs) {
-    int size;
+    Py_ssize_t size;
     const char * str;
 
     static char *kwlist[] = {
@@ -89,12 +101,13 @@ static PyObject *_reprs(PyObject *self, PyObject *args, PyObject *kwargs) {
     %% write init;
     %% write exec;
 
-    PyObject * ret = PyString_FromStringAndSize(buffer, out-buffer);
+    PyObject * ret = PyBytes_FromStringAndSize(buffer, out-buffer);
 
     free(buffer);
 
     return ret;
 }
+#pragma GCC diagnostic pop
 
 static int hexvalue[] = {
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
@@ -139,12 +152,16 @@ static int hexvalue[] = {
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-variable"
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+#pragma GCC diagnostic ignored "-Wunused-const-variable"
 %% write data;
 #pragma GCC diagnostic pop
 
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 static PyObject *_evals(PyObject *self, PyObject *args, PyObject *kwargs) {
-    int size;
+    Py_ssize_t size;
     const char * str;
 
     static char *kwlist[] = {
@@ -181,10 +198,11 @@ static PyObject *_evals(PyObject *self, PyObject *args, PyObject *kwargs) {
     %% write init;
     %% write exec;
 
-    PyObject * ret = PyString_FromStringAndSize(buffer, (char *)out-buffer);
+    PyObject * ret = PyBytes_FromStringAndSize(buffer, (char *)out-buffer);
 
     free(buffer);
 
     return ret;
 }
+#pragma GCC diagnostic pop
 

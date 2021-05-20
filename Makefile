@@ -11,4 +11,4 @@ reprs.go: reprs.go.rl
 
 clean:
 	rm -f _reprs.c
-	rm -f _reprs.so
+	rm -f _reprs.so _reprs.*.so
